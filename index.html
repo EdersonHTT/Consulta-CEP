@@ -11,14 +11,52 @@
     <main>
         <section>
             <h2>Consulte Seu CEP</h2>
-            <input id="CEP" type="text" required placeholder="00000-000">
-            <button id="botaoProcurar" type="submit">Procurar</button>
+            <input id="CEP" type="text" required placeholder="00000-000" maxlength="9"  oninput="validarValor(this)">
+            <button id="botaoProcurar">Procurar</button>
         </section>
         <article>
 
         </article>
     </main>
     <footer></footer>
+    <script>
+        function validarValor(input){
+            input.value = input.value.replace(/[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/g, '').replace(/[^0-9-]/g, '')
+        }
+        const input = document.getElementById('CEP')
+        input.addEventListener('keydown', (e)=>{
+            let nu = ''
+            const expreRe = /[0-9]/
+            if(e.key != 'Backspace' && e.key != '-' && expreRe.exec(e.key)){
+                if(input.value.length > 0){
+                    nu += input.value
+                    if(nu.length === 5){
+                        input.value += '-'
+                    }else if(nu.length === 9){
+                        nu = nu.slice(0, -1)
+                        input.value = nu
+                    }
+                }
+            } else if(e.key === '-' && input.value.length != 9){
+                setTimeout(() => {
+                    input.value = input.value.slice(0, -1)
+                }, 1);
+            }
+        })
+        setInterval(() => {
+            if(!input.value.includes('-') && input.value.length === 8){
+                let part1 = input.value.slice(0,-3)
+                let part2 = input.value.slice(5,8)
+                input.value = part1
+                if(input.value === part1){
+                    input.value += '-'+part2
+                }
+            }
+            if(!input.value.includes('-') && input.value.length === 9){
+                input.value = input.value.slice(0, -1)
+            }
+        }, 200);
+    </script>
     <script src="script.js" defer></script>
 </body>
 </html>
