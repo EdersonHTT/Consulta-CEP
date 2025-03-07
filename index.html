@@ -5,24 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consulta CEP</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="https://images.vexels.com/media/users/3/157970/isolated/preview/c156b4270aea292b9b335dd463ea17eb-icone-de-planeta-terra-icone-de-terra.png">
-</head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="icon" href="./img/marcacao.png">
 <body>
     <main>
-        <section>
-            <h2>Consulte Seu CEP</h2>
+        <section id="consulta">
+            <img src="./img/marcacao.png" alt="marcação">
+            <h1>Consulta CEP</h1>
+            <p>Descubra sua localização colocando seu CEP abaixo.</p>
             <input id="CEP" type="text" required placeholder="00000-000" maxlength="9"  oninput="validarValor(this)">
             <button id="botaoProcurar">Procurar</button>
+            <div id="infoLocal">
+                <h2>Localização</h2>
+                <p><b>Estado:</b><span id="estado"></span></p>
+                <p><b>Cidade:</b><span id="cidade"></span></p>
+                <p><b>Bairro:</b><span id="bairro"></span></p>
+                <p><b>Logradouro:</b><span id="logradouro"></span></p>
+            </div>
         </section>
-        <article>
-
-        </article>
+        <div id="mapa"></div>
+        
     </main>
-    <footer></footer>
+    <footer>
+        <p>&copy Consulta CEP 2025</p>
+    </footer>
     <script>
         function validarValor(input){
             input.value = input.value.replace(/[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/g, '').replace(/[^0-9-]/g, '')
         }
+
         const input = document.getElementById('CEP')
         input.addEventListener('keydown', (e)=>{
             let nu = ''
@@ -43,6 +54,7 @@
                 }, 1);
             }
         })
+
         setInterval(() => {
             if(!input.value.includes('-') && input.value.length === 8){
                 let part1 = input.value.slice(0,-3)
@@ -56,6 +68,8 @@
                 input.value = input.value.slice(0, -1)
             }
         }, 200);
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
     </script>
     <script src="script.js" defer></script>
 </body>
