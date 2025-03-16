@@ -7,24 +7,27 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <link rel="icon" href="./img/marcacao.png">
-<body>
-    <main>
+<body id="conteiner">
+    <main id="principal">
         <section id="consulta">
             <img src="./img/marcacao.png" alt="marcação">
             <h1>Consulta CEP</h1>
-            <p>Descubra sua localização colocando seu CEP abaixo.</p>
             <input id="CEP" type="text" required placeholder="00000-000" maxlength="9"  oninput="validarValor(this)">
-            <button id="botaoProcurar">Procurar</button>
+            <p>Descubra sua localização colocando seu CEP acima.</p>
+            <a id="move"><button id="botaoProcurar">Procurar</button></a>
             <div id="infoLocal">
                 <h2>Localização</h2>
-                <p><b>Estado:</b><span id="estado"></span></p>
-                <p><b>Cidade:</b><span id="cidade"></span></p>
-                <p><b>Bairro:</b><span id="bairro"></span></p>
-                <p><b>Logradouro:</b><span id="logradouro"></span></p>
+                <div class="mapa"></div>
+                <div id="info">
+                    <div id="textos">
+                        <p><b>Estado:</b><span id="estado"></span></p>
+                        <p><b>Cidade:</b><span id="cidade"></span></p>
+                        <p><b>Bairro:</b><span id="bairro"></span></p>
+                        <p><b>Logradouro:</b><span id="logradouro"></span></p>
+                    </div>
+                </div>
             </div>
         </section>
-        <div id="mapa"></div>
-        
     </main>
     <footer>
         <p>&copy Consulta CEP 2025</p>
@@ -68,6 +71,47 @@
                 input.value = input.value.slice(0, -1)
             }
         }, 200);
+
+        window.addEventListener('resize', trocaMapa)
+        function trocaMapa(){
+            const widthPage = window.innerWidth
+            if(widthPage <= 800 && redimencionado === false){
+                document.getElementById('infoLocal').style.display = 'none'
+                if(document.getElementById('mapa')){
+                    document.getElementById('mapa').remove()
+                }
+                let mapa = document.createElement('div')
+                let mapa2 = document.createElement('div')
+                document.getElementById('info').appendChild(mapa2)
+                mapa2.id = 'mapa'
+                document.getElementById('mapa').className = 'mapa'
+                document.getElementById('mapa').style.display = 'block'
+                document.getElementById('mapa').style.width = '70%'
+                document.getElementById('mapa').style.height = '200px'
+                redimencionado = true
+            } else if(widthPage > 800 && redimencionado === true){
+                document.getElementById('infoLocal').style.display = 'none'
+                document.getElementById('conteiner').style.height = '100vh'
+                if(document.getElementById('mapa')){
+                    document.getElementById('mapa').remove()
+                }
+                let mapa = document.createElement('div')
+                document.getElementById('principal').appendChild(mapa)
+                mapa.id = 'mapa'
+                document.getElementById('mapa').style.display = 'block'
+                document.getElementById('mapa').style.width = '100%'
+                map()
+                redimencionado = false
+            }
+        }
+
+    let redimencionado
+
+    if(window.innerWidth > 800){
+        redimencionado = true
+    } else {
+        redimencionado = false
+    }
     </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
     </script>

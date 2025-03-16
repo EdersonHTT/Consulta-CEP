@@ -1,24 +1,53 @@
 // api convertora de endereco para cordenadas
 
 async function localMapa (estado, cidade, bairro, lougradouro){
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${estado} ${cidade} ${bairro} ${lougradouro}&format=json`)
-    const responseCodenada = await response.json()
+    if(window.innerWidth < 800){
+        setTimeout(async () => {    
+            if(abrirMapa){
+                map()
+                abrirMapa = false
+            }
 
-    const cordenadas = [responseCodenada[0].lat, responseCodenada[0].lon]
-    mapa.setView(cordenadas, 17) 
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${estado} ${cidade} ${bairro} ${lougradouro}&format=json`)
+            const responseCodenada = await response.json()
 
-    if(circulo){
-        mapa.removeLayer(circulo)
+            const cordenadas = [responseCodenada[0].lat, responseCodenada[0].lon]
+            mapa.setView(cordenadas, 17) 
+
+            if(circulo){
+                mapa.removeLayer(circulo)
+            }
+
+            circulo = L.circle(cordenadas, {
+                color: '#73a6d9',
+                fillColor: '#73a6d9',
+                fillOpacity: 0.5,
+                radius: 500
+            }).addTo(mapa);
+        }, 50);
+    } else {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${estado} ${cidade} ${bairro} ${lougradouro}&format=json`)
+        const responseCodenada = await response.json()
+
+        const cordenadas = [responseCodenada[0].lat, responseCodenada[0].lon]
+        mapa.setView(cordenadas, 17) 
+
+        if(circulo){
+            mapa.removeLayer(circulo)
+        }
+
+        circulo = L.circle(cordenadas, {
+            color: '#73a6d9',
+            fillColor: '#73a6d9',
+            fillOpacity: 0.5,
+            radius: 500
+        }).addTo(mapa);
+
+        abrirMapa = true
     }
-
-    circulo = L.circle(cordenadas, {
-        color: '#73a6d9',
-        fillColor: '#73a6d9',
-        fillOpacity: 0.5,
-        radius: 500
-    }).addTo(mapa);
 }
 
+let abrirMapa = true
 let circulo
 
 // Uso da API para consultar cep
@@ -49,32 +78,44 @@ botao.addEventListener("click", async () =>{
             const infoLocalDisplay = window.getComputedStyle(infoLocal).display
 
             if(infoLocalDisplay === 'none'){
-                const sectionstyle = window.getComputedStyle(section).width
-                const infoLocalWidth = window.getComputedStyle(infoLocal).width
-
-                let calc = ((Number(sectionstyle.replaceAll('px', '')) / 100 * 50)-( Number(infoLocalWidth.replaceAll('px', '')) / 100 * 50)) / 100 * 50
-                
-                infoLocal.style.transition = '300ms'
+                infoLocal.style.transition = '500ms'
                 infoLocal.style.display = 'flex'
-                infoLocal.style.left = '-450px'
                 setInterval(() => {
-                    infoLocal.style.left = `${calc}px`
-                    setInterval(() => {
-                        infoLocal.style.removeProperty('left')
-                    }, 200)
-                }, 200)
+                    infoLocal.style.filter = 'opacity(100%)'
+                }, 300)
             }
-            localMapa(responseCep.estado, responseCep.localidade, responseCep.bairro, responseCep.logradouro)
+            
+            if(window.innerWidth <= 800){
+                document.getElementById('conteiner').style.height = 'auto'
+            } 
+
+            if(widthAtual != window.innerWidth){
+                cepLocalizado = ''
+                widthAtual = window.innerWidth
+            }
+ 
+            if(cepLocalizado != cep){
+                localMapa(responseCep.estado, responseCep.localidade, responseCep.bairro, responseCep.logradouro)
+                cepLocalizado = cep
+            }
         }
     }
 })
 
+let cepLocalizado
+let widthAtual
+
 // Mapa
 
-let mapa = L.map('mapa').setView([-29.76643, -51.119649], 5) 
+function map(){
+    mapa = L.map('mapa').setView([-26.76643, -60.119649], 4) 
 
-const layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-    minZoom: 3,
-});
-layer.addTo(mapa)
+    const layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19,
+        minZoom: 3,
+    });
+    layer.addTo(mapa)
+}
+let mapa
+
+trocaMapa()
