@@ -56,6 +56,8 @@ const inputNu = document.getElementById('CEP')
 const botao = document.getElementById('botaoProcurar')
 
 botao.addEventListener("click", async () =>{
+    const alertaLocal = document.getElementsByClassName('alert')[0]
+    const infoLocal = document.getElementById('infoLocal')
     let cep = `${inputNu.value}`
     cep = cep.replace('-', '')
     if(cep.length === 8){
@@ -72,20 +74,18 @@ botao.addEventListener("click", async () =>{
             cidade.textContent = ` ${responseCep.localidade}`
             bairro.textContent = ` ${responseCep.bairro}` 
             logradouro.textContent = ` ${responseCep.logradouro}`
-            const infoLocal = document.getElementById('infoLocal')
-            const section = document.getElementById('consulta')
             
             const infoLocalDisplay = window.getComputedStyle(infoLocal).display
 
             if(infoLocalDisplay === 'none'){
                 infoLocal.style.transition = '500ms'
                 infoLocal.style.display = 'flex'
-                setInterval(() => {
+                setTimeout(() => {
                     infoLocal.style.filter = 'opacity(100%)'
                 }, 300)
             }
             
-            if(window.innerWidth <= 800){
+            if(window.innerWidth <= 640){
                 document.getElementById('conteiner').style.height = 'auto'
             } 
 
@@ -98,6 +98,22 @@ botao.addEventListener("click", async () =>{
                 localMapa(responseCep.estado, responseCep.localidade, responseCep.bairro, responseCep.logradouro)
                 cepLocalizado = cep
             }
+        } else {
+            alertaLocal.style.transition = '500ms'
+            alertaLocal.style.display = 'flex'
+            infoLocal.style.transition = '500ms'
+            infoLocal.style.filter = 'opacity(0%)'
+            setTimeout(() => {
+                alertaLocal.style.filter = 'opacity(100%)'
+                infoLocal.style.display = 'none'
+                document.getElementById('conteiner').style.height = '100vh'
+                setTimeout(() => {
+                    alertaLocal.style.filter = 'opacity(0%)'
+                    setTimeout(() => {
+                        alertaLocal.style.display = 'none'
+                    }, 300)
+                }, 700)
+            }, 300)
         }
     }
 })
