@@ -1,53 +1,24 @@
 // api convertora de endereco para cordenadas
 
 async function localMapa (estado, cidade, bairro, lougradouro){
-    if(window.innerWidth < 800){
-        setTimeout(async () => {    
-            if(abrirMapa){
-                map()
-                abrirMapa = false
-            }
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${estado} ${cidade} ${bairro} ${lougradouro}&format=json`)
+    const responseCodenada = await response.json()
 
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${estado} ${cidade} ${bairro} ${lougradouro}&format=json`)
-            const responseCodenada = await response.json()
+    const cordenadas = [responseCodenada[0].lat, responseCodenada[0].lon]
+    mapa.setView(cordenadas, 17) 
 
-            const cordenadas = [responseCodenada[0].lat, responseCodenada[0].lon]
-            mapa.setView(cordenadas, 17) 
-
-            if(circulo){
-                mapa.removeLayer(circulo)
-            }
-
-            circulo = L.circle(cordenadas, {
-                color: '#73a6d9',
-                fillColor: '#73a6d9',
-                fillOpacity: 0.5,
-                radius: 500
-            }).addTo(mapa);
-        }, 50);
-    } else {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${estado} ${cidade} ${bairro} ${lougradouro}&format=json`)
-        const responseCodenada = await response.json()
-
-        const cordenadas = [responseCodenada[0].lat, responseCodenada[0].lon]
-        mapa.setView(cordenadas, 17) 
-
-        if(circulo){
-            mapa.removeLayer(circulo)
-        }
-
-        circulo = L.circle(cordenadas, {
-            color: '#73a6d9',
-            fillColor: '#73a6d9',
-            fillOpacity: 0.5,
-            radius: 500
-        }).addTo(mapa);
-
-        abrirMapa = true
+    if(circulo){
+        mapa.removeLayer(circulo)
     }
+
+    circulo = L.circle(cordenadas, {
+        color: '#73a6d9',
+        fillColor: '#73a6d9',
+        fillOpacity: 0.5,
+        radius: 500
+    }).addTo(mapa);
 }
 
-let abrirMapa = true
 let circulo
 
 // Uso da API para consultar cep
@@ -84,10 +55,6 @@ botao.addEventListener("click", async () =>{
                     infoLocal.style.filter = 'opacity(100%)'
                 }, 300)
             }
-            
-            if(window.innerWidth <= 640){
-                document.getElementById('conteiner').style.height = 'auto'
-            } 
 
             if(widthAtual != window.innerWidth){
                 cepLocalizado = ''
@@ -98,6 +65,7 @@ botao.addEventListener("click", async () =>{
                 localMapa(responseCep.estado, responseCep.localidade, responseCep.bairro, responseCep.logradouro)
                 cepLocalizado = cep
             }
+
         } else {
             alertaLocal.style.transition = '500ms'
             alertaLocal.style.display = 'flex'
@@ -121,9 +89,10 @@ botao.addEventListener("click", async () =>{
 let cepLocalizado
 let widthAtual
 
+
 // Mapa
 
-function map(){
+function map() {
     mapa = L.map('mapa').setView([-26.76643, -60.119649], 4) 
 
     const layer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -131,7 +100,47 @@ function map(){
         minZoom: 3,
     });
     layer.addTo(mapa)
+    return mapa
 }
-let mapa
+let mapa 
 
-trocaMapa()
+map()
+
+function redimencinaMapa() {
+    if (window.innerWidth <= 735) {
+        mapaTela.style.display = "none"
+        menu.style.display = "flex"
+        mapaTela.appendChild(monstraMenu)
+        menu.appendChild(monstraMapa)
+    } else {
+        mapaTela.style.display = "block"
+
+        if(document.getElementById("verMapa") && document.getElementById("verMenu")){
+            mapaTela.removeChild(document.getElementById("verMenu"))
+            menu.removeChild(document.getElementById("verMapa"))
+        }
+    }
+}
+
+let monstraMenu = document.createElement("button")
+let monstraMapa = document.createElement("button")
+monstraMenu.id = "verMenu"
+monstraMapa.id = "verMapa"
+monstraMenu.className = "trocar"
+monstraMapa.className= "trocar"
+let menu = document.getElementById("consulta")
+let mapaTela = document.getElementById("mapa")
+
+redimencinaMapa()
+window.onresize = redimencinaMapa
+
+monstraMenu.onclick = () => {
+    menu.style.display = "flex"
+    mapaTela.style.display = "none"
+}
+
+monstraMapa.onclick = () => {
+    menu.style.display = "none"
+    mapaTela.style.display = "block"
+    mapa.invalidateSize();
+}

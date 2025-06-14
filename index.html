@@ -31,6 +31,7 @@
                 <h2>CEP Não Encontrado!</h2>
             </div>
         </section>
+        <div id="mapa"></div>
     </main>
     <footer>
         <p>&copy Consulta CEP 2025</p>
@@ -75,46 +76,6 @@
             }
         }, 200);
 
-        window.addEventListener('resize', trocaMapa)
-        function trocaMapa(){
-            const widthPage = window.innerWidth
-            if(widthPage <= 800 && redimencionado === false){
-                document.getElementById('infoLocal').style.display = 'none'
-                if(document.getElementById('mapa')){
-                    document.getElementById('mapa').remove()
-                }
-                let mapa = document.createElement('div')
-                let mapa2 = document.createElement('div')
-                document.getElementById('info').appendChild(mapa2)
-                mapa2.id = 'mapa'
-                document.getElementById('mapa').className = 'mapa'
-                document.getElementById('mapa').style.display = 'block'
-                document.getElementById('mapa').style.width = '70%'
-                document.getElementById('mapa').style.height = '200px'
-                redimencionado = true
-            } else if(widthPage > 800 && redimencionado === true){
-                document.getElementById('infoLocal').style.display = 'none'
-                document.getElementById('conteiner').style.height = '100vh'
-                if(document.getElementById('mapa')){
-                    document.getElementById('mapa').remove()
-                }
-                let mapa = document.createElement('div')
-                document.getElementById('principal').appendChild(mapa)
-                mapa.id = 'mapa'
-                document.getElementById('mapa').style.display = 'block'
-                document.getElementById('mapa').style.width = '100%'
-                map()
-                redimencionado = false
-            }
-        }
-
-    let redimencionado
-
-    if(window.innerWidth > 800){
-        redimencionado = true
-    } else {
-        redimencionado = false
-    }
     </script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
     </script>

@@ -25,7 +25,8 @@ section {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    flex: 2 550px;
+    flex: 1 650px;
+    position: relative;
 }
 
 section img{
@@ -136,6 +137,14 @@ section p {
 #textos {
     order: 1;
     margin-left: 15px;
+    width: 80%;
+}
+
+#textos p, span{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: none;
+    width: 100%;
 }
 
 #infoLocal p {
@@ -166,6 +175,39 @@ section p {
     margin: 30px 0;
     align-self: center;
     max-width: 220px;
+}
+
+.trocar {
+    width: 80px;
+    height: 70px;
+    border:  1px solid #1e1e1e;
+    position: absolute;
+    top: 90px;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#verMapa {
+    right: 0;
+    border-right: 0;
+    border-bottom-left-radius: 0.5rem;
+    border-top-left-radius: 0.5rem;
+    background-image: url(./img/planeta.png);
+    background-color: #f6f9fd;
+    background-position-x: 5px;
+}
+
+#verMenu {
+    left: 0;
+    border-left: 0;
+    border-bottom-right-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    background-image: url(./img/seta.png);
+    background-position-x: 18px;
+    z-index: 1000;
+    background-color: #77c9ff;
+    background-size: 50%;
 }
 
 footer {
