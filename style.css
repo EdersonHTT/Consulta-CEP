@@ -180,34 +180,27 @@ section p {
 .trocar {
     width: 80px;
     height: 70px;
-    border:  1px solid #1e1e1e;
     position: absolute;
-    top: 90px;
+    top: 20px;
     background-size: 75%;
     background-repeat: no-repeat;
     background-position: center;
+    background-color:rgba(255, 255, 255, 0);
+    border: 0;
 }
 
 #verMapa {
     right: 0;
-    border-right: 0;
-    border-bottom-left-radius: 0.5rem;
-    border-top-left-radius: 0.5rem;
     background-image: url(./img/planeta.png);
-    background-color: #f6f9fd;
     background-position-x: 5px;
 }
 
 #verMenu {
-    left: 0;
-    border-left: 0;
-    border-bottom-right-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
+    right: 0;
     background-image: url(./img/seta.png);
-    background-position-x: 18px;
+    background-position-x: 5px;
+    filter: invert(100%);
     z-index: 1000;
-    background-color: #77c9ff;
-    background-size: 50%;
 }
 
 footer {
