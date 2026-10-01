@@ -1,0 +1,25 @@
+:root {
+    --border: rgb(28, 28, 31);
+    --bg-default: rgba(21, 22, 26, 0.918);
+    --secondary-color: rgba(31, 34, 204, 0.644);
+    --text: white;
+    --text-muted: rgb(133, 133, 133);
+    background-color: #15161a;
+}
+
+body {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: -4px;
+    z-index: -1;
+    background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.795)), url(https://static-madeinjapan.s3.amazonaws.com/wp-content/uploads/2009/02/fuji_vista-aerea-1024x680.jpg);
+    background-size: cover;
+    background-position: center;
+    filter: blur(3px);
+}
